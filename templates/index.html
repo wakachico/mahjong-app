@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5つの数字の掛け算アプリ</title>
+    <style>
+        body {
+            background: #f7f7f7;
+            font-family: 'Segoe UI', 'Meiryo', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            min-width: 320px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="number"] {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        button {
+            background: #0078d7;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.7rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #005fa3;
+        }
+        .result, .error {
+            margin-top: 1.2rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .result {
+            color: #007800;
+        }
+        .error {
+            color: #d70022;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>5つの数字の掛け算</h1>
+        <form method="post">
+            <label for="num1">1つ目の数字を入力してください</label>
+            <input type="number" step="any" id="num1" name="num1" required>
+            <label for="num2">2つ目の数字を入力してください</label>
+            <input type="number" step="any" id="num2" name="num2" required>
+            <label for="num3">3つ目の数字を入力してください</label>
+            <input type="number" step="any" id="num3" name="num3" required>
+            <label for="num4">4つ目の数字を入力してください</label>
+            <input type="number" step="any" id="num4" name="num4" required>
+            <label for="num5">5つ目の数字を入力してください</label>
+            <input type="number" step="any" id="num5" name="num5" required>
+            <button type="submit">掛け算する</button>
+        </form>
+        {% if result is not none %}
+            <div class="result">結果: {{ result }}</div>
+        {% endif %}
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html> 

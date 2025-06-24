@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>役の説明 - 麻雀点数計算アプリ</title>
+    <style>
+        body {
+            background: #f7f7f7;
+            font-family: 'Segoe UI', 'Meiryo', sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #0078d7;
+            padding-bottom: 1rem;
+        }
+        h2 {
+            color: #0078d7;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #0078d7;
+            padding-left: 1rem;
+        }
+        h3 {
+            color: #555;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+        .yaku-section {
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0078d7;
+        }
+        .yaku-item {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        .yaku-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .yaku-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #0078d7;
+            margin-right: 1rem;
+        }
+        .yaku-han {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .yaku-han.yakuman {
+            background: #ff4757;
+        }
+        .yaku-description {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+        .yaku-requirements {
+            background: #e8f5e8;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 4px solid #28a745;
+        }
+        .yaku-example {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 3px solid #007bff;
+        }
+        .yaku-note {
+            background: #f0f8ff;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 4px solid #0078d7;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .back-link a {
+            background: #0078d7;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .back-link a:hover {
+            background: #005fa3;
+        }
+        .toc {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+        }
+        .toc h3 {
+            margin-top: 0;
+            color: #0078d7;
+        }
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+        .toc li {
+            margin: 0.5rem 0;
+        }
+        .toc a {
+            color: #0078d7;
+            text-decoration: none;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .toc a:hover {
+            background: #e3f2fd;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .footer a:hover {
+            background-color: #f8f9fa;
+            text-decoration: none;
+        }
+        .content {
+            margin-bottom: 80px; /* フッターの高さ分の余白 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1 class="text-center mb-4">役（やく）ヘルプ</h1>
+            
+            <div class="alert alert-info">
+                <strong>役とは：</strong>麻雀で和了するために必要な条件の組み合わせです。役が一つも成立しないと和了できません。
+            </div>
+
+            <!-- 目次 -->
+            <div class="toc">
+                <h3>目次</h3>
+                <ul>
+                    <li><a href="#basic-yaku">基本役（1翻）</a></li>
+                    <li><a href="#medium-yaku">中級役（2-3翻）</a></li>
+                    <li><a href="#high-yaku">上級役（6翻以上）</a></li>
+                    <li><a href="#yakuman">役満（13翻）</a></li>
+                </ul>
+            </div>
+
+            <!-- 基本役 -->
+            <div class="yaku-section" id="basic-yaku">
+                <h2>基本役（1翻）</h2>
+                
+                <div class="yaku-item" id="riichi">
+                    <div class="yaku-header">
+                        <span class="yaku-name">リーチ</span>
+                        <span class="yaku-han">1翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        手牌を公開して和了を宣言する役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>手牌を公開すること</li>
+                            <li>他家の捨て牌でロン和了すること</li>
+                            <li>暗槓以外の槓はできない</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>手牌を公開して他家の捨て牌でロン
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="tanyao">
+                    <div class="yaku-header">
+                        <span class="yaku-name">断么九</span>
+                        <span class="yaku-han">1翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        老頭牌（1、9）と字牌を使わない役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>1と9の牌を使用しない</li>
+                            <li>字牌（東南西北白發中）を使用しない</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>2-3-4、5-5-5、6-7-8、2-2
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="pinfu">
+                    <div class="yaku-header">
+                        <span class="yaku-name">平和</span>
+                        <span class="yaku-han">1翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        面子をすべて順子で作り、雀頭を役牌以外にする役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>すべての面子が順子であること</li>
+                            <li>雀頭が役牌以外であること</li>
+                            <li>門前であること</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-2-3、4-5-6、7-8-9、2-2
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="ipeko">
+                    <div class="yaku-header">
+                        <span class="yaku-name">一盃口</span>
+                        <span class="yaku-han">1翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        同じ順子を2組作る役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>同じ順子を2組作ること</li>
+                            <li>門前であること</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-2-3、1-2-3、4-5-6、7-7
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="yakuhai">
+                    <div class="yaku-header">
+                        <span class="yaku-name">役牌</span>
+                        <span class="yaku-han">1翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        場風、自風、三元牌の刻子を作る役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>場風の刻子</li>
+                            <li>自風の刻子</li>
+                            <li>三元牌（白、發、中）の刻子</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>東-東-東（場風）、1-2-3、4-5-6、7-7
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中級役 -->
+            <div class="yaku-section" id="medium-yaku">
+                <h2>中級役（2-3翻）</h2>
+                
+                <div class="yaku-item" id="sanshoku">
+                    <div class="yaku-header">
+                        <span class="yaku-name">三色同順</span>
+                        <span class="yaku-han">2翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        同じ数字の順子を3種類の牌で作る役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>同じ数字の順子を萬子、筒子、索子で作ること</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-2-3萬、1-2-3筒、1-2-3索、4-4
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="ittsu">
+                    <div class="yaku-header">
+                        <span class="yaku-name">一気通貫</span>
+                        <span class="yaku-han">2翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        同じ種類の牌で1-2-3、4-5-6、7-8-9の順子を作る役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>同じ種類の牌で1-2-3、4-5-6、7-8-9の順子</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-2-3萬、4-5-6萬、7-8-9萬、東-東
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="chanta">
+                    <div class="yaku-header">
+                        <span class="yaku-name">混全帯幺九</span>
+                        <span class="yaku-han">2翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        すべての面子に老頭牌または字牌を含む役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>すべての面子に1、9、字牌のいずれかを含むこと</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-2-3、7-8-9、東-東-東、1-1
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="honitsu">
+                    <div class="yaku-header">
+                        <span class="yaku-name">混一色</span>
+                        <span class="yaku-han">3翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        一つの数牌と字牌のみで構成する役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>一つの数牌と字牌のみ使用</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-2-3萬、4-5-6萬、東-東-東、白-白
+                    </div>
+                </div>
+            </div>
+
+            <!-- 上級役 -->
+            <div class="yaku-section" id="high-yaku">
+                <h2>上級役（6翻以上）</h2>
+                
+                <div class="yaku-item" id="chinitsu">
+                    <div class="yaku-header">
+                        <span class="yaku-name">清一色</span>
+                        <span class="yaku-han">6翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        一つの数牌のみで構成する役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>一つの数牌のみ使用</li>
+                            <li>字牌は使用しない</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-2-3萬、4-5-6萬、7-8-9萬、1-1萬
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="kokushi">
+                    <div class="yaku-header">
+                        <span class="yaku-name">国士無双</span>
+                        <span class="yaku-han">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        老頭牌（1、9）と字牌をすべて集める役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>1萬、9萬、1筒、9筒、1索、9索</li>
+                            <li>東、南、西、北、白、發、中</li>
+                            <li>これら13種類の牌をすべて集める</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1萬、9萬、1筒、9筒、1索、9索、東、南、西、北、白、發、中（13種）
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="chitoitsu">
+                    <div class="yaku-header">
+                        <span class="yaku-name">七対子</span>
+                        <span class="yaku-han">2翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        対子を7組作る役です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>対子を7組作ること</li>
+                            <li>門前であること</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-1、2-2、3-3、4-4、5-5、6-6、7-7
+                    </div>
+                </div>
+            </div>
+
+            <!-- 役満 -->
+            <div class="yaku-section" id="yakuman">
+                <h2>役満（13翻）</h2>
+                
+                <div class="yaku-item" id="daisangen">
+                    <div class="yaku-header">
+                        <span class="yaku-name">大三元</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        三元牌（白、發、中）の刻子をすべて作る役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>白の刻子</li>
+                            <li>發の刻子</li>
+                            <li>中の刻子</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>白-白-白、發-發-發、中-中-中、1-2-3、東-東
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="suanko">
+                    <div class="yaku-header">
+                        <span class="yaku-name">四暗刻</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        暗刻を4個作る役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>暗刻を4個作ること</li>
+                            <li>すべて手牌内で作った刻子</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-1-1（暗刻）、2-2-2（暗刻）、3-3-3（暗刻）、4-4-4（暗刻）、東-東
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="tsuiso">
+                    <div class="yaku-header">
+                        <span class="yaku-name">字一色</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        字牌のみで構成する役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>字牌（東南西北白發中）のみ使用</li>
+                            <li>数牌は使用しない</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>東-東-東、南-南-南、西-西-西、北-北-北、白-白
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="chinroto">
+                    <div class="yaku-header">
+                        <span class="yaku-name">清老頭</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        老頭牌（1、9）のみで構成する役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>1と9の牌のみ使用</li>
+                            <li>字牌は使用しない</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-1-1、9-9-9、1-1-1、9-9-9、1-1
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="sushihou">
+                    <div class="yaku-header">
+                        <span class="yaku-name">四喜和</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        風牌（東南西北）の刻子をすべて作る役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>東の刻子</li>
+                            <li>南の刻子</li>
+                            <li>西の刻子</li>
+                            <li>北の刻子</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>東-東-東、南-南-南、西-西-西、北-北-北、白-白
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="tenho">
+                    <div class="yaku-header">
+                        <span class="yaku-name">天和</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        親が配牌時に和了する役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>親であること</li>
+                            <li>配牌時に和了すること</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>配牌時に既に和了形になっている（例：七対子、国士無双など）
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="chihou">
+                    <div class="yaku-header">
+                        <span class="yaku-name">地和</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        子が第一打で和了する役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>子であること</li>
+                            <li>第一打で和了すること</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>他家の第一打でロン和了（例：七対子、国士無双など）
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="chuurenpoto">
+                    <div class="yaku-header">
+                        <span class="yaku-name">九蓮宝燈</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        一つの数牌で1-1-1-2-3-4-5-6-7-8-9-9-9の形を作る役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>一つの数牌で1-1-1-2-3-4-5-6-7-8-9-9-9の形</li>
+                            <li>同じ牌を4枚使用</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-1-1萬、2-3-4萬、5-6-7萬、8-9-9萬、1-9（待ち）
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="ryuiso">
+                    <div class="yaku-header">
+                        <span class="yaku-name">緑一色</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        緑色の牌のみで構成する役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>緑色の牌のみ使用</li>
+                            <li>2索、3索、4索、6索、8索、發</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>2-3-4索、6-6-6索、8-8-8索、發-發-發、2-2索
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="daisushi">
+                    <div class="yaku-header">
+                        <span class="yaku-name">大四喜</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        風牌（東南西北）の刻子をすべて作る役満です（四喜和と同じ）。
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>東-東-東、南-南-南、西-西-西、北-北-北、白-白
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="suanko_tanki">
+                    <div class="yaku-header">
+                        <span class="yaku-name">四暗刻単騎</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        四暗刻を単騎待ちで和了する役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>暗刻を4個作ること</li>
+                            <li>単騎待ちで和了すること</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-1-1（暗刻）、2-2-2（暗刻）、3-3-3（暗刻）、4-4-4（暗刻）、東（単騎待ち）
+                    </div>
+                </div>
+
+                <div class="yaku-item" id="junsei_chuurenpoto">
+                    <div class="yaku-header">
+                        <span class="yaku-name">純正九蓮宝燈</span>
+                        <span class="yaku-han yakuman">13翻</span>
+                    </div>
+                    <div class="yaku-description">
+                        九蓮宝燈を単騎待ちで和了する役満です。
+                    </div>
+                    <div class="yaku-requirements">
+                        <strong>成立条件：</strong>
+                        <ul>
+                            <li>九蓮宝燈の形であること</li>
+                            <li>単騎待ちで和了すること</li>
+                        </ul>
+                    </div>
+                    <div class="yaku-example">
+                        <strong>例：</strong>1-1-1萬、2-3-4萬、5-6-7萬、8-9-9萬、1（単騎待ち）
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <a href="/">← 計算に戻る</a>
+    </div>
+</body>
+</html> 

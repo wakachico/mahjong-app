@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>翻数の説明 - 麻雀点数計算アプリ</title>
+    <style>
+        body {
+            background: #f7f7f7;
+            font-family: 'Segoe UI', 'Meiryo', sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #0078d7;
+            padding-bottom: 1rem;
+        }
+        h2 {
+            color: #0078d7;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #0078d7;
+            padding-left: 1rem;
+        }
+        h3 {
+            color: #555;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0078d7;
+        }
+        .han-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .han-table th, .han-table td {
+            border: 1px solid #ddd;
+            padding: 0.8rem;
+            text-align: left;
+        }
+        .han-table th {
+            background: #0078d7;
+            color: white;
+            font-weight: bold;
+        }
+        .han-table tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+        .example {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 3px solid #007bff;
+        }
+        .note {
+            background: #fff3cd;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 4px solid #ffc107;
+        }
+        .warning {
+            background: #f8d7da;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 4px solid #dc3545;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .back-link a {
+            background: #0078d7;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .back-link a:hover {
+            background: #005fa3;
+        }
+        .highlight {
+            background: #ffeb3b;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .important {
+            background: #ffcdd2;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #d32f2f;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .footer a:hover {
+            background-color: #f8f9fa;
+            text-decoration: none;
+        }
+        .content {
+            margin-bottom: 80px; /* フッターの高さ分の余白 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1 class="text-center mb-4">翻（はん）計算ヘルプ</h1>
+            
+            <div class="alert alert-info">
+                <strong>翻とは：</strong>麻雀の役の強さを表す単位です。翻数が高いほど点数が高くなります。
+            </div>
+
+            <div class="section">
+                <h2>翻の基本</h2>
+                <p>翻は役の強さを表し、以下のように点数計算に影響します：</p>
+                <ul>
+                    <li>1翻：基本点の2倍</li>
+                    <li>2翻：基本点の4倍</li>
+                    <li>3翻：基本点の8倍</li>
+                    <li>4翻：基本点の16倍</li>
+                    <li>5翻：基本点の32倍</li>
+                    <li>6翻以上：基本点の64倍</li>
+                    <li>役満（13翻）：基本点の128倍</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>翻の計算方法</h2>
+                <p>複数の役が成立する場合、翻数は<strong>加算</strong>されます。</p>
+                
+                <div class="example">
+                    <strong>例：</strong>リーチ（1翻）+ 断么九（1翻）+ 平和（1翻）= 3翻
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>翻の上限</h2>
+                <p>通常の役は最大で13翻までですが、役満は13翻固定です。</p>
+                
+                <div class="note">
+                    <strong>注意：</strong>役満が複数成立する場合（例：大三元+四暗刻）は、役満が重複して計算されることがあります。
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>翻と点数の関係</h2>
+                <div class="fu-table">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>翻数</th>
+                                <th>基本点の倍数</th>
+                                <th>30符の場合</th>
+                                <th>40符の場合</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1翻</td>
+                                <td>2倍</td>
+                                <td>60点</td>
+                                <td>80点</td>
+                            </tr>
+                            <tr>
+                                <td>2翻</td>
+                                <td>4倍</td>
+                                <td>120点</td>
+                                <td>160点</td>
+                            </tr>
+                            <tr>
+                                <td>3翻</td>
+                                <td>8倍</td>
+                                <td>240点</td>
+                                <td>320点</td>
+                            </tr>
+                            <tr>
+                                <td>4翻</td>
+                                <td>16倍</td>
+                                <td>480点</td>
+                                <td>640点</td>
+                            </tr>
+                            <tr>
+                                <td>5翻</td>
+                                <td>32倍</td>
+                                <td>960点</td>
+                                <td>1280点</td>
+                            </tr>
+                            <tr>
+                                <td>6翻以上</td>
+                                <td>64倍</td>
+                                <td>1920点</td>
+                                <td>2560点</td>
+                            </tr>
+                            <tr>
+                                <td>役満（13翻）</td>
+                                <td>128倍</td>
+                                <td>3840点</td>
+                                <td>5120点</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>翻の計算例</h2>
+                <div class="example">
+                    <strong>例1：</strong>リーチ（1翻）+ 断么九（1翻）= 2翻<br>
+                    40符の場合：40 × 4 = 160点
+                </div>
+
+                <div class="example">
+                    <strong>例2：</strong>清一色（6翻）= 6翻<br>
+                    40符の場合：40 × 64 = 2560点
+                </div>
+
+                <div class="example">
+                    <strong>例3：</strong>大三元（13翻）= 13翻（役満）<br>
+                    40符の場合：40 × 128 = 5120点
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>注意事項</h2>
+                <div class="note">
+                    <ul>
+                        <li>翻数は必ず整数になります</li>
+                        <li>役満は他の役と組み合わせても13翻のままです</li>
+                        <li>符と翻の両方が点数計算に必要です</li>
+                        <li>本場数や供託棒も最終点数に影響します</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <a href="/">← 計算に戻る</a>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>符計算の説明 - 麻雀点数計算アプリ</title>
+    <style>
+        body {
+            background: #f7f7f7;
+            font-family: 'Segoe UI', 'Meiryo', sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #0078d7;
+            padding-bottom: 1rem;
+        }
+        h2 {
+            color: #0078d7;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #0078d7;
+            padding-left: 1rem;
+        }
+        h3 {
+            color: #555;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0078d7;
+        }
+        .fu-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .fu-table th, .fu-table td {
+            border: 1px solid #ddd;
+            padding: 0.8rem;
+            text-align: left;
+        }
+        .fu-table th {
+            background: #0078d7;
+            color: white;
+            font-weight: bold;
+        }
+        .fu-table tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+        .example {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 3px solid #007bff;
+        }
+        .note {
+            background: #fff3cd;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 4px solid #ffc107;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .back-link a {
+            background: #0078d7;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .back-link a:hover {
+            background: #005fa3;
+        }
+        .highlight {
+            background: #ffeb3b;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .footer a:hover {
+            background-color: #f8f9fa;
+            text-decoration: none;
+        }
+        .content {
+            margin-bottom: 80px; /* フッターの高さ分の余白 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1 class="text-center mb-4">符（ふ）計算ヘルプ</h1>
+            
+            <div class="alert alert-info">
+                <strong>符とは：</strong>麻雀の手牌の形に基づいて計算される基本点です。符は翻数と組み合わせて最終的な点数を決定します。
+            </div>
+
+            <div class="section">
+                <h2>基本符（20符）</h2>
+                <p>すべての和了に基本符として20符が与えられます。</p>
+            </div>
+
+            <div class="section">
+                <h2>面子符</h2>
+                
+                <h3>刻子符</h3>
+                <div class="fu-table">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>刻子の種類</th>
+                                <th>中張牌（2-8）</th>
+                                <th>老頭牌（1、9）・字牌</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>暗刻</td>
+                                <td>8符</td>
+                                <td>32符</td>
+                            </tr>
+                            <tr>
+                                <td>明刻</td>
+                                <td>4符</td>
+                                <td>16符</td>
+                            </tr>
+                            <tr>
+                                <td>暗槓</td>
+                                <td>32符</td>
+                                <td>64符</td>
+                            </tr>
+                            <tr>
+                                <td>明槓</td>
+                                <td>16符</td>
+                                <td>32符</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="example">
+                    <strong>例：</strong>暗刻「5-5-5」= 8符、明刻「東-東-東」= 16符
+                </div>
+
+                <h3>順子符</h3>
+                <p>順子には符は付きません（0符）。</p>
+                <div class="example">
+                    <strong>例：</strong>順子「1-2-3」= 0符
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>雀頭符</h2>
+                <p>役牌（場風、自風、三元牌）の対子には2符が付きます。</p>
+                <div class="example">
+                    <strong>例：</strong>場風が東の場合、「東-東」= 2符
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>待ち符</h2>
+                <div class="fu-table">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>待ちの種類</th>
+                                <th>符</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>両面待ち</td>
+                                <td>0符</td>
+                            </tr>
+                            <tr>
+                                <td>辺張待ち</td>
+                                <td>2符</td>
+                            </tr>
+                            <tr>
+                                <td>嵌張待ち</td>
+                                <td>2符</td>
+                            </tr>
+                            <tr>
+                                <td>単騎待ち</td>
+                                <td>2符</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="example">
+                    <strong>例：</strong>「1-2」待ち（3待ち）= 辺張待ちで2符
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>符計算の例</h2>
+                <div class="example">
+                    <strong>例1：</strong><br>
+                    暗刻「5-5-5」（8符）+ 明刻「東-東-東」（16符）+ 順子「1-2-3」（0符）+ 順子「7-8-9」（0符）+ 雀頭「2-2」（0符）+ 両面待ち（0符）<br>
+                    = 20 + 8 + 16 + 0 + 0 + 0 + 0 = 44符 → 50符（切り上げ）
+                </div>
+
+                <div class="example">
+                    <strong>例2：</strong><br>
+                    暗刻「1-1-1」（32符）+ 暗刻「9-9-9」（32符）+ 明刻「白-白-白」（16符）+ 順子「2-3-4」（0符）+ 雀頭「東-東」（2符）+ 単騎待ち（2符）<br>
+                    = 20 + 32 + 32 + 16 + 0 + 2 + 2 = 104符 → 110符（切り上げ）
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>注意事項</h2>
+                <div class="note">
+                    <ul>
+                        <li>符は10の倍数に切り上げます（例：34符 → 40符）</li>
+                        <li>平和は固定で30符になります</li>
+                        <li>七対子は固定で25符になります</li>
+                        <li>国士無双は固定で25符になります</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <a href="/">← 計算に戻る</a>
+    </div>
+</body>
+</html> 

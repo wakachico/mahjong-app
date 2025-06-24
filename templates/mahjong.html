@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>麻雀点数計算アプリ</title>
+    <style>
+        body {
+            background: #f7f7f7;
+            font-family: 'Segoe UI', 'Meiryo', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .form-section h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+        .yaku-section {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+        .yaku-category {
+            margin-bottom: 1rem;
+        }
+        .yaku-category h4 {
+            margin: 0 0 0.5rem 0;
+            color: #0078d7;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0.25rem;
+        }
+        .fu-calc-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        .mentsu-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        .fu-result {
+            background: #e8f5e8;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: bold;
+            color: #007800;
+        }
+        button {
+            background: #0078d7;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        button:hover {
+            background: #005fa3;
+        }
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f0f8ff;
+            border-radius: 8px;
+            border-left: 4px solid #0078d7;
+        }
+        .result h3 {
+            margin-top: 0;
+            color: #0078d7;
+        }
+        .result-item {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+        .score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007800;
+        }
+        .error {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff0f0;
+            border-radius: 6px;
+            color: #d70022;
+            border-left: 4px solid #d70022;
+        }
+        .info {
+            background: #f0f0f0;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .tab-container {
+            margin-bottom: 2rem;
+        }
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 1rem;
+        }
+        .tab-button {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-bottom: none;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            margin-right: 0.5rem;
+        }
+        .tab-button.active {
+            background: #0078d7;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🀄 麻雀点数計算アプリ</h1>
+        
+        <div class="info">
+            <strong>使い方:</strong> 符計算または手動入力で符を設定し、該当する役を選択してから「点数計算」ボタンを押してください。
+        </div>
+
+        <form method="post">
+            <!-- 基本情報 -->
+            <div class="form-section">
+                <h3>基本情報</h3>
+                <div class="form-group">
+                    <label for="han">翻数（役以外） <a href="/han_help" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1.2rem; margin-left: 0.5rem;" title="翻数の説明">❓</a>:</label>
+                    <input type="number" id="han" name="han" value="0" min="0" max="13">
+                </div>
+                <div class="form-group">
+                    <label for="fu">符 <a href="/fu_manual_help" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1.2rem; margin-left: 0.5rem;" title="符の手動入力説明">❓</a>:</label>
+                    <input type="number" id="fu" name="fu" value="30" min="20" max="110" step="10">
+                </div>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="is_oya" name="is_oya">
+                        <label for="is_oya">親</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="is_ron" name="is_ron">
+                        <label for="is_ron">ロン</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 符計算 -->
+            <div class="form-section fu-calc-section">
+                <h3>符計算 <a href="/fu_help" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1.2rem; margin-left: 0.5rem;" title="符計算の説明">❓</a></h3>
+                
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <div class="tab-button active" onclick="showTab('manual')">手動入力</div>
+                        <div class="tab-button" onclick="showTab('auto')">自動計算</div>
+                    </div>
+                    
+                    <!-- 手動入力タブ -->
+                    <div id="manual-tab" class="tab-content active">
+                        <div class="form-group">
+                            <label for="fu">符:</label>
+                            <input type="number" id="fu" name="fu" value="30" min="20" max="110" step="10">
+                        </div>
+                    </div>
+                    
+                    <!-- 自動計算タブ -->
+                    <div id="auto-tab" class="tab-content">
+                        <div class="form-group">
+                            <label for="hand_type">和了方法:</label>
+                            <select id="hand_type" name="hand_type">
+                                <option value="ツモ">ツモ</option>
+                                <option value="ロン">ロン</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="wait_type">待ち:</label>
+                            <select id="wait_type" name="wait_type">
+                                <option value="両面待ち">両面待ち</option>
+                                <option value="辺張待ち">辺張待ち</option>
+                                <option value="嵌張待ち">嵌張待ち</option>
+                                <option value="単騎待ち">単騎待ち</option>
+                                <option value="双ポン待ち">双ポン待ち</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pair_type">対子:</label>
+                            <select id="pair_type" name="pair_type">
+                                <option value="通常">通常</option>
+                                <option value="役牌">役牌</option>
+                            </select>
+                        </div>
+                        
+                        <h4>面子の構成（最大4面子）:</h4>
+                        <div class="mentsu-row">
+                            <div>
+                                <label for="mentsu_type_0">面子1の種類:</label>
+                                <select id="mentsu_type_0" name="mentsu_type_0">
+                                    <option value="">選択してください</option>
+                                    <option value="暗刻">暗刻</option>
+                                    <option value="明刻">明刻</option>
+                                    <option value="暗槓">暗槓</option>
+                                    <option value="明槓">明槓</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="mentsu_tile_0">面子1の牌:</label>
+                                <select id="mentsu_tile_0" name="mentsu_tile_0">
+                                    <option value="">選択してください</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="東">東</option>
+                                    <option value="南">南</option>
+                                    <option value="西">西</option>
+                                    <option value="北">北</option>
+                                    <option value="白">白</option>
+                                    <option value="發">發</option>
+                                    <option value="中">中</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mentsu-row">
+                            <div>
+                                <label for="mentsu_type_1">面子2の種類:</label>
+                                <select id="mentsu_type_1" name="mentsu_type_1">
+                                    <option value="">選択してください</option>
+                                    <option value="暗刻">暗刻</option>
+                                    <option value="明刻">明刻</option>
+                                    <option value="暗槓">暗槓</option>
+                                    <option value="明槓">明槓</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="mentsu_tile_1">面子2の牌:</label>
+                                <select id="mentsu_tile_1" name="mentsu_tile_1">
+                                    <option value="">選択してください</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="東">東</option>
+                                    <option value="南">南</option>
+                                    <option value="西">西</option>
+                                    <option value="北">北</option>
+                                    <option value="白">白</option>
+                                    <option value="發">發</option>
+                                    <option value="中">中</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mentsu-row">
+                            <div>
+                                <label for="mentsu_type_2">面子3の種類:</label>
+                                <select id="mentsu_type_2" name="mentsu_type_2">
+                                    <option value="">選択してください</option>
+                                    <option value="暗刻">暗刻</option>
+                                    <option value="明刻">明刻</option>
+                                    <option value="暗槓">暗槓</option>
+                                    <option value="明槓">明槓</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="mentsu_tile_2">面子3の牌:</label>
+                                <select id="mentsu_tile_2" name="mentsu_tile_2">
+                                    <option value="">選択してください</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="東">東</option>
+                                    <option value="南">南</option>
+                                    <option value="西">西</option>
+                                    <option value="北">北</option>
+                                    <option value="白">白</option>
+                                    <option value="發">發</option>
+                                    <option value="中">中</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mentsu-row">
+                            <div>
+                                <label for="mentsu_type_3">面子4の種類:</label>
+                                <select id="mentsu_type_3" name="mentsu_type_3">
+                                    <option value="">選択してください</option>
+                                    <option value="暗刻">暗刻</option>
+                                    <option value="明刻">明刻</option>
+                                    <option value="暗槓">暗槓</option>
+                                    <option value="明槓">明槓</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="mentsu_tile_3">面子4の牌:</label>
+                                <select id="mentsu_tile_3" name="mentsu_tile_3">
+                                    <option value="">選択してください</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="東">東</option>
+                                    <option value="南">南</option>
+                                    <option value="西">西</option>
+                                    <option value="北">北</option>
+                                    <option value="白">白</option>
+                                    <option value="發">發</option>
+                                    <option value="中">中</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 役選択 -->
+            <div class="form-section">
+                <h3>役選択</h3>
+                <div class="yaku-section">
+                    <div class="yaku-category">
+                        <h4>1翻役</h4>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="リーチ" name="yaku" value="リーチ">
+                                <label for="リーチ">リーチ (1翻) <a href="/yaku_help#reach" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="リーチの説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="断幺九" name="yaku" value="断幺九">
+                                <label for="断幺九">断幺九 (1翻) <a href="/yaku_help#tanyao" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="断幺九の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="平和" name="yaku" value="平和">
+                                <label for="平和">平和 (1翻) <a href="/yaku_help#pinfu" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="平和の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="一杯口" name="yaku" value="一杯口">
+                                <label for="一杯口">一杯口 (1翻) <a href="/yaku_help#ipeko" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="一杯口の説明">❓</a></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="yaku-category">
+                        <h4>2翻役</h4>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="三色同順" name="yaku" value="三色同順">
+                                <label for="三色同順">三色同順 (2翻) <a href="/yaku_help#sanshoku" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="三色同順の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="対々和" name="yaku" value="対々和">
+                                <label for="対々和">対々和 (2翻) <a href="/yaku_help#toitoi" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="対々和の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="三暗刻" name="yaku" value="三暗刻">
+                                <label for="三暗刻">三暗刻 (2翻) <a href="/yaku_help#sananko" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="三暗刻の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="小三元" name="yaku" value="小三元">
+                                <label for="小三元">小三元 (2翻) <a href="/yaku_help#shosangen" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="小三元の説明">❓</a></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="yaku-category">
+                        <h4>3翻役</h4>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="混一色" name="yaku" value="混一色">
+                                <label for="混一色">混一色 (3翻) <a href="/yaku_help#honitsu" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="混一色の説明">❓</a></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="yaku-category">
+                        <h4>6翻役</h4>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="清一色" name="yaku" value="清一色">
+                                <label for="清一色">清一色 (6翻) <a href="/yaku_help#chinitsu" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="清一色の説明">❓</a></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="yaku-category">
+                        <h4>役満</h4>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="大三元" name="yaku" value="大三元">
+                                <label for="大三元">大三元 (13翻) <a href="/yaku_help#daisangen" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="大三元の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="四暗刻" name="yaku" value="四暗刻">
+                                <label for="四暗刻">四暗刻 (13翻) <a href="/yaku_help#suanko" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="四暗刻の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="字一色" name="yaku" value="字一色">
+                                <label for="字一色">字一色 (13翻) <a href="/yaku_help#tsuiso" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="字一色の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="清老頭" name="yaku" value="清老頭">
+                                <label for="清老頭">清老頭 (13翻) <a href="/yaku_help#chinroto" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="清老頭の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="四喜和" name="yaku" value="四喜和">
+                                <label for="四喜和">四喜和 (13翻) <a href="/yaku_help#sushihou" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="四喜和の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="天和" name="yaku" value="天和">
+                                <label for="天和">天和 (13翻) <a href="/yaku_help#tenho" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="天和の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="地和" name="yaku" value="地和">
+                                <label for="地和">地和 (13翻) <a href="/yaku_help#chihou" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="地和の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="九蓮宝燈" name="yaku" value="九蓮宝燈">
+                                <label for="九蓮宝燈">九蓮宝燈 (13翻) <a href="/yaku_help#chuurenpoto" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="九蓮宝燈の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="緑一色" name="yaku" value="緑一色">
+                                <label for="緑一色">緑一色 (13翻) <a href="/yaku_help#ryuiso" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="緑一色の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="大四喜" name="yaku" value="大四喜">
+                                <label for="大四喜">大四喜 (13翻) <a href="/yaku_help#daisushi" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="大四喜の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="四暗刻単騎" name="yaku" value="四暗刻単騎">
+                                <label for="四暗刻単騎">四暗刻単騎 (13翻) <a href="/yaku_help#suanko_tanki" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="四暗刻単騎の説明">❓</a></label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="純正九蓮宝燈" name="yaku" value="純正九蓮宝燈">
+                                <label for="純正九蓮宝燈">純正九蓮宝燈 (13翻) <a href="/yaku_help#junsei_chuurenpoto" target="_blank" style="text-decoration: none; color: #0078d7; font-size: 1rem; margin-left: 0.3rem;" title="純正九蓮宝燈の説明">❓</a></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">点数計算</button>
+        </form>
+
+        {% if result %}
+        <div class="result">
+            <h3>計算結果</h3>
+            <div class="result-item">
+                <strong>総翻数:</strong> {{ result.han }}翻
+            </div>
+            <div class="result-item">
+                <strong>符:</strong> {{ result.fu }}符
+                {% if result.calculated_fu %}
+                    <span class="fu-result">（自動計算: {{ result.calculated_fu }}符）</span>
+                {% endif %}
+            </div>
+            <div class="result-item">
+                <strong>和了方法:</strong> {{ "ロン" if result.is_ron else "ツモ" }}
+            </div>
+            <div class="result-item">
+                <strong>親子:</strong> {{ "親" if result.is_oya else "子" }}
+            </div>
+            {% if result.yaku_list %}
+            <div class="result-item">
+                <strong>成立役:</strong> {{ ", ".join(result.yaku_list) }}
+            </div>
+            {% endif %}
+            <div class="result-item">
+                <strong>点数:</strong> <span class="score">{{ "{:,}".format(result.score) }}点</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+    </div>
+    <script>
+        function showTab(tab) {
+            document.getElementById('manual-tab').classList.remove('active');
+            document.getElementById('auto-tab').classList.remove('active');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            if (tab === 'manual') {
+                document.getElementById('manual-tab').classList.add('active');
+                document.querySelectorAll('.tab-button')[0].classList.add('active');
+            } else {
+                document.getElementById('auto-tab').classList.add('active');
+                document.querySelectorAll('.tab-button')[1].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
