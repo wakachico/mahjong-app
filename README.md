@@ -40,7 +40,7 @@ Flaskで作成された麻雀の点数計算Webアプリケーションです。
 
 1. **リポジトリのクローン**
 ```bash
-git clone https://github.com/yourusername/mahjong-score-calculator.git
+git clone https://github.com/wakachico/mahjong-app.git
 cd mahjong-score-calculator
 ```
 
